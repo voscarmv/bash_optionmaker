@@ -1,0 +1,9 @@
+Just run example.sh and read stdout
+
+This is loosely based on a section from Peter Seebach's
+"Beginning Portable Shell Scripting: From Novice to Professional (2008)":
+	Ch 6: Invocation and execution
+	Shell invocation
+	Manipulating parameters for fun and profit
+	Older shells: now what?
+	(Page 127)

@@ -1,0 +1,89 @@
+function unrecognized() {
+	FNAME=${1}
+	OPTION=${2}
+	{
+	printf "%s: unrecognized option '%s'\nTry %s --help for more information.\n" "${FNAME}" "${OPTION}" "${FNAME}"
+	} 1>&2
+}
+
+function invalid() {
+	FNAME=${1}
+	OPTION=${2}
+	ARGUMENT=${3}
+	{
+	printf "%s: invalid %s argument `%s'\n" "${FNAME}" "${OPTION}" "${ARGUMENT}"
+	} 1>&2
+}
+
+function help_msg() {
+	printf '%s' 'Usage: funfun [ -b ] [ -v val ]
+-b | --boole	Blah blah blah
+-v | --val	Blah blah blah
+-		Nothing
+'
+}
+
+function funfun() {
+	VERBOSE='false'
+	PIPE=1
+	MIN=0
+	SWITCH=:
+	while test ${#} -gt 0 ; do
+		OPT=${1}
+		shift
+		case "${OPT}" in
+			-s|--switch)
+				SWITCH='false'
+		;;	-p|--pipe)
+				if test "${1}" = 9 ; then
+					invalid "${FUNCNAME}" "${OPT}" "${1}"
+					return 2
+				fi
+				PIPE=${1}
+				shift
+		;;	-m|--min)
+				if echo "${1}" | grep -q '[^0-9]' ; then
+					invalid "${FUNCNAME}" "${OPT}" "${1}"
+					return 2
+				fi
+				if test "${1}" -gt 3 ; then
+					invalid "${FUNCNAME}" "${OPT}" "${1}"
+					return 2
+				fi
+				MIN=${1}
+				shift
+		;;	-l|--list)
+				if echo "${1}" | grep -vq '^[0-9ABCDEF][0-9ABCDEF]$' ; then
+					invalid "${FUNCNAME}" "${OPT}" "${1}"
+					return 2
+				fi
+				LISTS=${LISTS+${LISTS}:}${1}
+				shift
+		;;	-v|--verbose)
+				VERBOSE=:
+		;;	-h|--help)
+				help_msg
+				return 0
+		;;	-s*|-h*|-v*)
+				REST="`printf '%s' \"${OPT}\" | sed 's/^..//'`"
+				OPT="`printf '%s' \"${OPT}\" | sed 's/^\(..\).*/\1/'`"
+				set dummy "${OPT}" '-'"${REST}" ${1+"${@}"}
+				shift
+		;;	-m*|-p*)
+				ARG="`printf '%s' \"${OPT}\" | sed 's/^..//'`"
+				OPT="`printf '%s' \"${OPT}\" | sed 's/^\(..\).*/\1/'`"
+				set dummy "${OPT}" "${ARG}" ${1+"${@}"}
+				shift
+		;;	--)
+				break
+		;;	-*)
+				unrecognized "${FUNCNAME}" "${OPT}"
+				return 1
+		;;	*)
+				set dummy "${OPT}" ${1+"${@}"}
+				shift
+				break
+		;;
+		esac
+	done
+}

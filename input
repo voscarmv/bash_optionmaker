@@ -1,0 +1,47 @@
+# bash_optionmaker, Copyright 2013 Vicente Oscar Mier Vela
+#    This file is part of bash_optionmaker.
+#
+#    bash_optionmaker is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    bash_optionmaker is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with bash_optionmaker.  If not, see <http://www.gnu.org/licenses/>.
+arg:
+default:1
+short:p
+long:pipe
+invalid:test \"${1}\" = 9
+end:
+arg:
+default:0
+short:m
+long:min
+invalid:echo \"${1}\" | grep -q '[^0-9]'
+invalid:test \"${1}\" -gt 3
+end:
+boole:
+default::
+short:s
+long:switch
+end:
+list:
+short:l
+long:list
+invalid:echo \"${1}\" | grep -vq '^[0-9ABCDEF][0-9ABCDEF]$'
+end:
+help:
+Usage: funfun [ -b ] [ -v val ]
+	-b | --boole	Blah blah blah
+	-v | --val	Blah blah blah
+	-		Nothing
+end:
+fname:
+funfun
+end:
