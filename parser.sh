@@ -21,7 +21,8 @@
 #				Insert args to SEC_4_8
 
 #	1.a. Unrecognized option error message
-SEC_1_a='function unrecognized() {
+SEC_1_a_FNAME='function unrecognized() {'
+SEC_1_a='
 	FNAME=${1}
 	OPTION=${2}
 	{
@@ -30,7 +31,8 @@ SEC_1_a='function unrecognized() {
 }
 '
 #	1.b. Invalid option argument error message
-SEC_1_b='function invalid() {
+SEC_1_b_FNAME='function invalid() {'
+SEC_1_b='
 	FNAME=${1}
 	OPTION=${2}
 	ARGUMENT=${3}
@@ -40,7 +42,8 @@ SEC_1_b='function invalid() {
 }
 '
 #	2. Help message function
-SEC_2='function	help_msg() {
+SEC_2_FNAME='function help_msg() {'
+SEC_2='
 	:
 }
 '
@@ -226,7 +229,7 @@ while read LINE ; do
 	;;'
 	fi
 	if test "${ATTRIB}" = 'help' ; then
-		SEC_2='function help_msg() {
+		SEC_2='
 	printf '"'"'%s'"'"' '"'"
 		while read LINE ; do
 			ATTRIB=`echo ${LINE} | sed 's/^\([^:][^:]*\):.*$/\1/'`
@@ -244,13 +247,29 @@ while read LINE ; do
 		read LINE
 		SEC_FUNC_a='function '"${LINE}"'() {
 '
+		SEC_1_a_FNAME='function unrecognized_'"${LINE}"'() {'
+		SEC_1_b_FNAME='function invalid_'"${LINE}"'() {'
+		SEC_2_FNAME='function help_msg_'"${LINE}"'() {'
+		SEC_4_2=`echo "${SEC_4_2}" | sed 's/^[\t][\t]*invalid/&_'"${LINE}"'/g'`
+		SEC_4_3=`echo "${SEC_4_3}" | sed 's/^[\t][\t]*invalid/&_'"${LINE}"'/g'`
+		SEC_4_5='	-h|--help)
+					help_msg_'"${LINE}"'
+					return 0
+			;;'
+		SEC_4_11='	-*)
+					unrecognized_'"${LINE}"' "${FUNCNAME}" "${OPT}"
+					return 1
+			;;'
 	fi
 done
 
+printf '%s' "${SEC_1_a_FNAME}"
 printf '%s' "${SEC_1_a}"
 echo
+printf '%s' "${SEC_1_b_FNAME}"
 printf '%s' "${SEC_1_b}"
 echo
+printf '%s' "${SEC_2_FNAME}"
 printf '%s' "${SEC_2}"
 echo
 printf '%s' "${SEC_FUNC_a}"

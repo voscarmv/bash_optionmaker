@@ -192,3 +192,6 @@ Suggested solutions:
 	Make help_msg() name configurable, as well as the name of VERBOSE vars.
 	For VERBOSE and help_msg(), a second, simple script, could be written
 	which would change their names on a per-function basis.
+Thu Jan 26 12:45:42 EST 2017
+	Added quick and dirty fix to make unrecognized and invalid functions function names relative to main function name.
+	The rule: fname line in input file should come last.
