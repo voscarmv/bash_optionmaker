@@ -223,6 +223,8 @@ while read LINE ; do
 			;;
 			esac
 		done
+		SEC_3="${SEC_3}"'unset '"${LONGUPPER}"'
+'
 		SEC_4_3="${SEC_4_3}"'	'"${SHORT}"'|'"${LONG}"')
 '"${INVALID}"'			'"${LONGUPPER}"'=${'"${LONGUPPER}"'+${'"${LONGUPPER}"'}:}${1}
 			shift
