@@ -37,7 +37,7 @@ SEC_1_b='
 	OPTION=${2}
 	ARGUMENT=${3}
 	{
-	printf "%s: invalid %s argument `%s'"'"'\n" "${FNAME}" "${OPTION}" "${ARGUMENT}"
+	printf "%s: invalid %s argument %s'"'"'\n" "${FNAME}" "${OPTION}" "${ARGUMENT}"
 	} 1>&2
 }
 '
@@ -212,7 +212,7 @@ while read LINE ; do
 				short)
 					SHORT='-'"${VALUE}"
 			;;	long)
-					LONG='--'"${LONG}"
+					LONG='--'"${VALUE}"
 					LONGUPPER="`echo \"${VALUE}\" | tr [a-z] [A-Z]`"'S'
 			;;	invalid)
 					INVALID="${INVALID}"'			if '"${VALUE}"' ; then
